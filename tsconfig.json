@@ -4,10 +4,11 @@
     "module": "CommonJS",
     "target": "ES2017",
     "strict": true,
-    "outDir": "build",
-    "rootDir": ".",
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "outDir": "dist",
+    "rootDir": "src",
+    "moduleResolution": "node",
+ "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules" ],
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

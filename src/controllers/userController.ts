@@ -1,16 +1,16 @@
 import { Request, Response } from 'express'
 import * as userService from '../services/userService'
+import { registerSchema, loginSchema } from '../utils/validators'
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
-  const { first_name, last_name, email, password } = req.body
-
-  if (!first_name || !last_name || !email || !password) {
-    res.status(400).json({ message: 'All fields are required' })
+  const parsed = registerSchema.safeParse(req.body)
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors })
     return
   }
 
   try {
-    const result = await userService.registerUser({ first_name, last_name, email, password })
+    const result = await userService.registerUser(parsed.data)
     res.status(result.status).json({ message: result.message })
   } catch (error) {
     console.error(error)
@@ -19,15 +19,14 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  const { email, password } = req.body
-
-  if (!email || !password) {
-    res.status(400).json({ message: 'Email and password are required' })
+  const parsed = loginSchema.safeParse(req.body)
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors })
     return
   }
 
   try {
-    const result = await userService.loginUser(email, password)
+    const result = await userService.loginUser(parsed.data.email, parsed.data.password)
     res.status(result.status).json(result.data)
   } catch (error) {
     console.error(error)
