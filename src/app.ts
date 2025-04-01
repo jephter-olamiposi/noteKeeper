@@ -1,12 +1,17 @@
-import express from 'express'
-import routes from './routes'
+import express from "express";
+import cors from "cors";
+import routes from "./routes";
 
+const app = express();
 
-const app = express()
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
 
+app.use(express.json());
+app.use("/api", routes);
 
-app.use(express.json())
-
-app.use('/api', routes) // All routes prefixed with /api
-
-export default app
+export default app;

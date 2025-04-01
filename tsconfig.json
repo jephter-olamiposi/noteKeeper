@@ -5,10 +5,10 @@
     "target": "ES2017",
     "strict": true,
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "moduleResolution": "node",
  "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src"],
+  "include": ["src", "knexfile.ts"],
   "exclude": ["node_modules", "dist"]
 }
