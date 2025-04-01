@@ -25,11 +25,14 @@ export const updateNote = async (
   userId: number,
   noteId: number,
   updates: { title?: string; contents?: string }
-) => {
-  await db('note')
+): Promise<number> => {
+  const result = await db('note')
     .where({ user_id: userId, note_id: noteId })
     .update({ ...updates, updated_at: db.fn.now() })
+
+  return result // number of rows updated
 }
+
 
 export const deleteNote = async (userId: number, noteId: number) => {
   await db('note').where({ user_id: userId, note_id: noteId }).del()

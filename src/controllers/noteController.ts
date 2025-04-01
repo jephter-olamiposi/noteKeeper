@@ -38,7 +38,6 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const getOne = async (req: Request, res: Response): Promise<void> => {
-
   const userId = req.user?.id
   const noteId = Number(req.params.id)
   if (!userId) { res.status(401).json({ message: 'Unauthorized' })
@@ -56,20 +55,29 @@ export const getOne = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export const update = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req: Request, res: Response): Promise<void>  => {
   const userId = req.user?.id
   const noteId = Number(req.params.id)
-  if (!userId) { res.status(401).json({ message: 'Unauthorized' })
-    return
-  }
+  if (!userId) {res.status(401).json({ message: 'Unauthorized' })
+  return
+}
 
   try {
-    await noteService.updateNote(userId, noteId, req.body)
+    const updatedCount = await noteService.updateNote(userId, noteId, req.body)
+
+    if (updatedCount === 0) {
+     res.status(404).json({ message: 'Note not found or not owned by user' })
+     return
+
+    }
+
     res.status(200).json({ message: 'Note updated successfully' })
   } catch (error) {
+    console.error(error)
     res.status(500).json({ message: 'Failed to update note' })
   }
 }
+
 
 export const remove = async (req: Request, res: Response): Promise<void>  => {
   const userId = req.user?.id
