@@ -1,9 +1,7 @@
 import db from "../config/db";
+import { NoteInput } from "../utils/noteValidators";
 
-export const createNote = async (
-  userId: number,
-  data: { title?: string; contents?: string }
-) => {
+export const createNote = async (userId: number, data: NoteInput) => {
   const [note] = await db("note")
     .insert({ ...data, user_id: userId })
     .returning(["note_id", "title", "contents", "created_at", "updated_at"]);
@@ -24,7 +22,7 @@ export const getNoteById = async (userId: number, noteId: number) => {
 export const updateNote = async (
   userId: number,
   noteId: number,
-  updates: { title?: string; contents?: string }
+  updates: Partial<NoteInput>
 ): Promise<number> => {
   const result = await db("note")
     .where({ user_id: userId, note_id: noteId })

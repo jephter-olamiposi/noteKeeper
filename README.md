@@ -60,7 +60,7 @@ Authorization: Bearer <token>
 ### 1. Clone the project
 
 ```bash
-git clone https://github.com/your-username/notekeeper.git
+git clone https://github.com/jephter-olamiposi/noteKeeper.git
 cd notekeeper
 ```
 
