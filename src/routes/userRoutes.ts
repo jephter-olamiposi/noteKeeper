@@ -1,12 +1,35 @@
-import { Router } from 'express'
-import * as userController from '../controllers/userController'
-import { authenticate } from '../middleware/auth'
+import { Router } from "express";
+import * as userController from "../controllers/userController";
+import { validate } from "../middleware/validate";
+import { asyncHandler } from "../middleware/asyncHandler";
+import { requireAuth } from "../middleware/requireAuth";
+import { authenticate } from "../middleware/auth";
 
-const router = Router()
+import { loginSchema, registerSchema } from "../utils/userValidators";
 
-router.post('/signup', userController.signup)
-router.post('/login', userController.login)
-router.put('/update', authenticate, userController.update)
-router.delete('/delete', authenticate, userController.remove)
+const router = Router();
 
-export default router
+router.post(
+  "/signup",
+  validate(registerSchema),
+  asyncHandler(userController.signup)
+);
+router.post(
+  "/login",
+  validate(loginSchema),
+  asyncHandler(userController.login)
+);
+router.put(
+  "/update",
+  authenticate,
+  requireAuth,
+  asyncHandler(userController.update)
+);
+router.delete(
+  "/delete",
+  authenticate,
+  requireAuth,
+  asyncHandler(userController.remove)
+);
+
+export default router;

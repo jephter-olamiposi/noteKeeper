@@ -8,20 +8,19 @@ export const authenticate = (
   next: NextFunction
 ): any => {
   const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer "))
+  if (!authHeader?.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Authorization token missing" });
-
-  const token = authHeader.split(" ")[1];
+  }
 
   try {
+    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET!) as {
       id: number;
       email: string;
     };
     req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: "Invalid or expired token" });
+    return next();
+  } catch {
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };

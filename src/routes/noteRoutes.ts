@@ -1,15 +1,20 @@
-import { Router } from 'express'
-import * as noteController from '../controllers/noteController'
-import { authenticate } from '../middleware/auth'
+import { Router } from "express";
+import * as noteController from "../controllers/noteController";
+import { validate } from "../middleware/validate";
+import { asyncHandler } from "../middleware/asyncHandler";
+import { requireAuth } from "../middleware/requireAuth";
+import { authenticate } from "../middleware/auth";
 
-const router = Router()
+import { noteSchema } from "../utils/noteValidators";
 
-router.use(authenticate)
+const router = Router();
 
-router.post('/', noteController.create)
-router.get('/', noteController.getAll)
-router.get('/:id', noteController.getOne)
-router.put('/:id', noteController.update)
-router.delete('/:id', noteController.remove)
+router.use(authenticate, requireAuth);
 
-export default router
+router.post("/", validate(noteSchema), asyncHandler(noteController.create));
+router.get("/", asyncHandler(noteController.getAll));
+router.get("/:id", asyncHandler(noteController.getOne));
+router.put("/:id", asyncHandler(noteController.update));
+router.delete("/:id", asyncHandler(noteController.remove));
+
+export default router;
