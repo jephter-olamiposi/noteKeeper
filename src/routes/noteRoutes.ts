@@ -1,20 +1,17 @@
 import { Router } from "express";
 import * as noteController from "../controllers/noteController";
 import { validate } from "../middleware/validate";
-import { asyncHandler } from "../middleware/asyncHandler";
-import { requireAuth } from "../middleware/requireAuth";
-import { authenticate } from "../middleware/auth";
-
+import { auth } from "../middleware/auth";
 import { noteSchema } from "../utils/noteValidators";
 
 const router = Router();
 
-router.use(authenticate, requireAuth);
+router.use(auth);
 
-router.post("/", validate(noteSchema), asyncHandler(noteController.create));
-router.get("/", asyncHandler(noteController.getAll));
-router.get("/:id", asyncHandler(noteController.getOne));
-router.put("/:id", asyncHandler(noteController.update));
-router.delete("/:id", asyncHandler(noteController.remove));
+router.post("/", validate(noteSchema), noteController.create);
+router.get("/", noteController.getAll);
+router.get("/:id", noteController.getOne);
+router.put("/:id", noteController.update);
+router.delete("/:id", noteController.remove);
 
 export default router;
